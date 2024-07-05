@@ -52,7 +52,10 @@ class TrustSolanaWeb3Provider extends BaseProvider {
   }
 
   setAddress(address) {
-    this.publicKey = Web3.Keypair.generate().publicKey;
+    console.log("setAddress++++" + address);
+
+    // this.publicKey = Web3.Keypair.generate().publicKey;
+    this.publicKey = new PublicKey(address);
     this.isConnected = true;
     this.emit("connect", this.publicKey);
     this.emitAccountChanged();
