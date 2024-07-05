@@ -27,6 +27,9 @@ class TrustSolanaWeb3Provider extends BaseProvider {
       Web3.clusterApiUrl(config.solana.cluster),
       "confirmed"
     );
+    this.isPhantom = true;
+    this.isSolflare = true;
+    this.isGlow = true;
 
     Start(this);
   }
@@ -34,7 +37,7 @@ class TrustSolanaWeb3Provider extends BaseProvider {
   connect() {
     return this._request("requestAccounts").then((addresses) => {
       this.setAddress(addresses[0]);
-      this.emit("connect");
+      return this.publicKey;
     });
   }
 
@@ -43,13 +46,16 @@ class TrustSolanaWeb3Provider extends BaseProvider {
       this.publicKey = null;
       this.isConnected = false;
       this.emit("disconnect");
+      this.emitAccountChanged();
       resolve();
     });
   }
 
   setAddress(address) {
-    this.publicKey = new PublicKey(address);
+    this.publicKey = Web3.Keypair.generate().publicKey;
     this.isConnected = true;
+    this.emit("connect", this.publicKey);
+    this.emitAccountChanged();
   }
 
   emitAccountChanged() {
@@ -176,6 +182,8 @@ class TrustSolanaWeb3Provider extends BaseProvider {
           resolve(data);
         }
       });
+
+      // console.log(`==> callbacks id ${json.stringify(this.callbacks)}`);
 
       switch (method) {
         case "signMessage":

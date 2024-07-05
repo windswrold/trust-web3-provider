@@ -50,7 +50,7 @@ export type TrustFeature = {
 export class TrustWallet implements Wallet {
     readonly #listeners: { [E in StandardEventsNames]?: StandardEventsListeners[E][] } = {};
     readonly #version = '1.0.0' as const;
-    readonly #name = 'Trust' as const;
+    readonly #name = 'Pallet' as const;
     readonly #icon = icon;
     #account: TrustWalletAccount | null = null;
     readonly #trust: Trust;
