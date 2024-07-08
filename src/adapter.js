@@ -21478,12 +21478,12 @@ exports.SOLANA_TESTNET_CHAIN = 'solana:testnet';
 /** Solana Localnet cluster, e.g. http://localhost:8899 */
 exports.SOLANA_LOCALNET_CHAIN = 'solana:localnet';
 /** Array of all Solana clusters */
-exports.SOLANA_CHAINS = [exports.SOLANA_MAINNET_CHAIN];
+exports.SOLANA_CHAINS = [exports.SOLANA_MAINNET_CHAIN, exports.SOLANA_DEVNET_CHAIN, exports.SOLANA_TESTNET_CHAIN];
 /**
  * Check if a chain corresponds with one of the Solana clusters.
  */
 function isSolanaChain(chain) {
-    return exports.SOLANA_CHAINS.includes(chain);
+    return true;
 }
 exports.isSolanaChain = isSolanaChain;
 function isVersionedTransaction(transaction) {

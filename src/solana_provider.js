@@ -12,6 +12,7 @@ import bs58 from "bs58";
 import Utils from "./utils";
 import ProviderRpcError from "./error";
 import { default as Start } from "./adapter";
+import base58 from "bs58";
 
 const { PublicKey, Connection } = Web3;
 
@@ -24,8 +25,7 @@ class TrustSolanaWeb3Provider extends BaseProvider {
     this.publicKey = null;
     this.isConnected = false;
     this.connection = new Connection(
-      Web3.clusterApiUrl(config.solana.cluster),
-      "confirmed"
+      config.solana.cluster
     );
     this.isPhantom = true;
     this.isSolflare = true;
@@ -84,6 +84,7 @@ class TrustSolanaWeb3Provider extends BaseProvider {
 
     if (this.isDebug) {
       console.log(`==> signed single ${JSON.stringify(tx)}`);
+      console.log('==== publicKey ' + this.publicKey);
     }
 
     return tx;
@@ -93,14 +94,14 @@ class TrustSolanaWeb3Provider extends BaseProvider {
     const data = JSON.stringify(tx);
     const version = tx.version;
 
-    const raw = Buffer.from(
+    const raw = base58.encode(Buffer.from(
       tx.serialize({
-        requireAllSignatures: false,
-        verifySignatures: false,
+        requireAllSignatures: true,
+        verifySignatures: true,
       })
-    ).toString("base64");
+    ));
 
-    const rawMessage = Buffer.from(tx.message.serialize()).toString("base64");
+    const rawMessage = base58.encode(Buffer.from(tx.message.serialize()));
 
     return this._request("signRawTransaction", {
       data,
@@ -157,6 +158,7 @@ class TrustSolanaWeb3Provider extends BaseProvider {
       );
     }
     return this.signTransaction(tx).then(async (signedTx) => {
+      console.log("signAndSendTransaction", signedTx.serialize());
       const signature = await this.connection.sendRawTransaction(
         signedTx.serialize(),
         options
