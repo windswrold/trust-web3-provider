@@ -55,6 +55,7 @@ class TrustWeb3Provider extends BaseProvider {
   }
 
   request(payload) {
+    console.log(`==> request payload ${JSON.stringify(payload)}`);
     // this points to window in methods like web3.eth.getAccounts()
     var that = this;
     if (!(this instanceof TrustWeb3Provider)) {
